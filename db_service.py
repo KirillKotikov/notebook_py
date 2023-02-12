@@ -32,6 +32,10 @@ def find_by_date_period(dates):
         else: result_notes.append(all_notes[i])
     return result_notes
 
+def find_by_id(id):
+    all_notes = get_all_notes()
+    for note in all_notes:
+        if note[0] == id: return note
 
 def get_new_id():
     all_notes = get_all_notes()

@@ -29,5 +29,15 @@ def search_notes_by_date():
     except Exception:
         print("Вы ввели некорректные даты!")
 
+def show_note():
+    while True:
+        id = input("Введите id заметки для отображения: ")
+        if id.isdigit():
+            print(table_service.print_note(db_service.find_by_id(id)))
+            break
+        else:
+            print("Вы ввели не число!")
+
+
 def view_all_notes():
     print(table_service.print_notes_list(db_service.get_all_notes()))
