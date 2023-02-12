@@ -6,20 +6,32 @@ def get_all_notes():
     temp_data = list()
     notes = list()
 
-    with open(FILE, 'r', encoding='utf-8') as data:
-        for line in data: temp_data.append(line)
+    try: 
+        with open(FILE, 'r', encoding='utf-8') as data:
+            for line in data: temp_data.append(line)
 
-    for i in temp_data:
-        temp_list = i.split(';')
-        temp_list[-1] = temp_list[-1][:-1:] # удаляет /n в конце последнего элемента списка, вообще любой элемент))) держи в базе переход на новую строку
-        notes.append(temp_list)
-
+        for i in temp_data:
+            temp_list = i.split(';')
+            temp_list[-1] = temp_list[-1][:-1:] # удаляет /n в конце последнего элемента списка, вообще любой элемент))) держи в базе переход на новую строку
+            notes.append(temp_list)
+    except IOError:
+        print("База данных пуста!")
     return notes
 
 def add_new_note(note):
     id =get_new_id()
-    write_data([id, note[0], note[1], datetime.now()])
+    data_list = list()
+    data_list.append([id, note[0], note[1], datetime.now()])
+    write_data(data_list, 'a')
     return id
+
+def edit_note(edit_note):
+    all_notes = get_all_notes()
+    for i in range(len(all_notes)):
+        if all_notes[i][0] == edit_note[0]:
+            all_notes[i] = edit_note
+    update_db(all_notes)
+    return edit_note[0]
 
 def find_by_date_period(dates):
     all_notes = get_all_notes()
@@ -46,13 +58,18 @@ def get_new_id():
             id = int(last_id) + 1
     return id
 
-def write_data(data):
-    with open(FILE, 'a', encoding='utf-8') as file:
-        file.write("\n")
-        for i in range(len(data)):
-            if i == len(data)-1:
-                file.write(str(data[i]))
-            else:
-                file.write(str(data[i]))
-                file.write(";")
-        
+def update_db(notes):
+    write_data(notes, 'w')
+
+def write_data(list, mode):
+    with open(FILE, mode, encoding='utf-8') as file:
+        for data in list:
+            if data[0] == 1:
+                file.write("id;Заголовок;Текст_заметки;Дата_изменения")
+            file.write("\n")
+            for i in range(len(data)):
+                if i == len(data)-1:
+                    file.write(str(data[i]))
+                else:
+                    file.write(str(data[i]))
+                    file.write(";")
