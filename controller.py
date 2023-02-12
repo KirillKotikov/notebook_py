@@ -20,5 +20,7 @@ def start():
             ui.search_notes_by_date()
         elif command == "5":
             ui.edit_note_by_id()
+        elif command == "6":
+            ui.delete_by_id()
         elif command == "7":
             exit()

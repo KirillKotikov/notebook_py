@@ -25,6 +25,23 @@ def add_new_note(note):
     write_data(data_list, 'a')
     return id
 
+def delete_note(id):
+    note_is_exist = False
+    all_notes = get_all_notes()
+    for i in range(len(all_notes)):
+        if note_is_exist and i > (len(all_notes)):
+            break
+        if note_is_exist:
+            all_notes[i-1][0] = str(int(all_notes[i-1][0]) - 1)
+        elif all_notes[i][0] == id:
+            all_notes.remove(all_notes[i])
+            note_is_exist = True
+        
+
+    if note_is_exist:
+        update_db(all_notes)
+    return note_is_exist
+
 def edit_note(edit_note):
     all_notes = get_all_notes()
     for i in range(len(all_notes)):
@@ -65,11 +82,10 @@ def write_data(list, mode):
     with open(FILE, mode, encoding='utf-8') as file:
         for data in list:
             if data[0] == 1:
-                file.write("id;Заголовок;Текст_заметки;Дата_изменения")
-            file.write("\n")
+                file.write("id;Заголовок;Текст_заметки;Дата_изменения\n")
             for i in range(len(data)):
                 if i == len(data)-1:
-                    file.write(str(data[i]))
+                    file.write(str(data[i]) + "\n")
                 else:
                     file.write(str(data[i]))
                     file.write(";")
